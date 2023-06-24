@@ -31,7 +31,8 @@ app.post('/lax', (req, res) => {
     res.cookie('laxCookie', 'cookie from lax', {
       sameSite: 'lax',
       httpOnly: true,
-      domain: 'http://localhost:3000',
+      domain: 'localhost',
+      path: '/',
     });
     return res.status(200).json({
       status: true,
@@ -50,7 +51,8 @@ app.post('/none', (req, res) => {
       sameSite: 'none',
       secure: true,
       httpOnly: true,
-      domain: 'http://localhost:3000',
+      domain: 'localhost',
+      path: '/',
     });
     return res.status(200).json({
       status: true,
