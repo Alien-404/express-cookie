@@ -14,6 +14,7 @@ app.use(
   cors({
     origin: process.env.FE_ORIGIN || 'http://localhost:3000',
     credentials: true,
+    exposedHeaders: ['set-cookie'],
     // eslint-disable-next-line comma-dangle
   })
 );
@@ -30,6 +31,7 @@ app.post('/lax', (req, res) => {
     res.cookie('laxCookie', 'cookie from lax', {
       sameSite: 'lax',
       httpOnly: true,
+      domain: 'http://localhost:3000',
     });
     return res.status(200).json({
       status: true,
@@ -48,6 +50,7 @@ app.post('/none', (req, res) => {
       sameSite: 'none',
       secure: true,
       httpOnly: true,
+      domain: 'http://localhost:3000',
     });
     return res.status(200).json({
       status: true,
@@ -70,6 +73,24 @@ app.get('/clear-cookies', (req, res) => {
     message: 'All cookies cleared.',
     data: null,
   });
+});
+
+app.post('/manual', (req, res) => {
+  try {
+    // Mengatur cookie secara manual
+    res.cookie('manual', 'cookie from manual', {
+      maxAge: 3600000, // Waktu kadaluarsa cookie dalam milidetik (contoh: 1 jam)
+      httpOnly: true, // Hanya diakses melalui protokol HTTP dan tidak dapat diakses melalui JavaScript di sisi klien
+      sameSite: 'Lax', // Cookie hanya dikirim dalam konteks situs yang sama
+    });
+    return res.status(200).json({
+      status: true,
+      message: 'success',
+      data: req.body,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 app.listen(PORT || 3000, '0.0.0.0', () => {
